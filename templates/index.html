@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>{% block title %}Wordle Search{% endblock %}</h2>
+
+<form class="form" method="post">
+
+    <div class="form-group">
+        Do not include words with these characters
+        <input type="text" name="nocharacters" placeholder="{{ res['nocharacters'] }}"
+            class="form-control" value="{{ res['nocharacters'] or request.form['nocharacters'] }}">
+        <small class="form-text text-muted">Tip: If you want to search for words without the characters: a, b, c, write: abc</small>
+        </div>
+
+    Search for words with these characters at each position:
+    <div class="input-group mb-2 mr-sm-2">
+        <div class="input-group-prepend">
+            <div class="input-group-text">#1</div>
+        </div>
+        <input type="text" name="pos1" id="pos1" placeholder="{{ res['pos1'] }}"
+            class="form-control" value="{{ res['pos1'] or request.form['pos1'] }}">
+    </div>
+    <div class="input-group mb-2 mr-sm-2">
+        <div class="input-group-prepend">
+            <div class="input-group-text">#2</div>
+        </div>
+        <input type="text" name="pos2" id="pos2" placeholder="{{ res['pos2'] }}"
+            class="form-control" value="{{ res['pos2'] or request.form['pos2'] }}">
+    </div>
+    <div class="input-group mb-2 mr-sm-2">
+        <div class="input-group-prepend">
+            <div class="input-group-text">#3</div>
+        </div>
+        <input type="text" name="pos3" id="pos3" placeholder="{{ res['pos3'] }}"
+            class="form-control" value="{{ res['pos3'] or request.form['pos3'] }}">
+    </div>
+    <div class="input-group mb-2 mr-sm-2">
+        <div class="input-group-prepend">
+            <div class="input-group-text">#4</div>
+        </div>
+        <input type="text" name="pos4" id="pos4" placeholder="{{ res['pos4'] }}"
+            class="form-control" value="{{ res['pos4'] or request.form['pos4'] }}">
+    </div>
+    <div class="input-group mb-2 mr-sm-2">
+        <div class="input-group-prepend">
+            <div class="input-group-text">#5</div>
+        </div>
+        <input type="text" name="pos5" id="pos5" placeholder="{{ res['pos5'] }}"
+            class="form-control" value="{{ res['pos5'] or request.form['pos5'] }}">
+    </div>
+
+
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+<hr>
+
+<!-- blocks for content -->
+<h3>Results:</h3>
+{% for word in res['hit_words'] %}
+{{ word }}
+<br>
+{% endfor %}
+<hr>
+
+
+{% endblock %}
