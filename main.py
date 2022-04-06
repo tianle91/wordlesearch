@@ -60,6 +60,8 @@ def index():
                 for s in data
                 if valid_5_letter_satisfying(s, pos_d=pos_d, no_chars=no_chars)
             })
+            if len(hit_words) == 0:
+                hit_words = ['No hits.']
         else:
             hit_words = []
             if not pos_d_valid(pos_d):
