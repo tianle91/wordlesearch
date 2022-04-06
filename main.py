@@ -47,11 +47,12 @@ def index():
     hit_words = []
     if request.method == 'POST':
         no_chars = request.form['nocharacters'].lower()
-        pos_d = {
-            k - 1: request.form[f'pos{k}']
-            for k in [1, 2, 3, 4, 5]
-        }
-        pos_d = {k: v for k, v in pos_d.items() if len(v) > 0}
+
+        pos_d = {}
+        for k in [1, 2, 3, 4, 5]:
+            v = request.form[f'pos{k}'].lower()
+            if len(v) > 0:
+                pos_d[k - 1] = v
 
         if pos_d_valid(pos_d) and no_chars_valid(no_chars):
             hit_words = list({
