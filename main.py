@@ -1,10 +1,10 @@
 from flask import Flask, render_template, request
 
-
 app = Flask(__name__)
 
+
 with open('words.txt') as f:
-    data = f.read().split()
+    data = sorted(f.read().split())
 
 
 def valid_5_letter(s) -> bool:
@@ -28,46 +28,28 @@ def valid_5_letter_satisfying(s, pos_d, no_chars) -> bool:
     return False
 
 
-def no_chars_valid(no_chars):
-    return all([
-        c in 'abcdefghijklmnopqrstuvwxyz'
-        for c in no_chars
-    ])
-
-
-def pos_d_valid(pos_d):
-    return all([
-        (v in 'abcdefghijklmnopqrstuvwxyz') and (len(v) == 1)
-        for v in pos_d.values()
-    ])
-
-
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    A2Z = 'abcdefghijklmnopqrstuvwxyz'
     hit_words = []
     if request.method == 'POST':
-        no_chars = request.form['nocharacters'].lower()
-
+        no_chars = [
+            c for c in request.form['nocharacters'].lower()
+            if c in A2Z
+        ]
         pos_d = {}
         for k in [1, 2, 3, 4, 5]:
             v = request.form[f'pos{k}'].lower()
-            if len(v) > 0:
-                pos_d[k - 1] = v
-
-        if pos_d_valid(pos_d) and no_chars_valid(no_chars):
-            hit_words = list({
+            if len(v) > 0 and v[0] in A2Z:
+                pos_d[k - 1] = v[0]
+        if len(no_chars) > 0 or len(pos_d) > 0:
+            hit_words = sorted(list({
                 s.lower()
                 for s in data
                 if valid_5_letter_satisfying(s, pos_d=pos_d, no_chars=no_chars)
-            })
-            if len(hit_words) == 0:
-                hit_words = ['No hits.']
+            }))
         else:
-            hit_words = []
-            if not pos_d_valid(pos_d):
-                hit_words.append(f'Invalid pos_d: {pos_d}')
-            if not no_chars_valid(no_chars):
-                hit_words.append(f'Invalid no_chars: {no_chars}')
+            hit_words = ['You need to fill out something.']
 
     res = {**request.form, 'hit_words': hit_words}
     return render_template('index.html', res=res)
